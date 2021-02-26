@@ -51,7 +51,15 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun MyApp() {
     Surface(color = MaterialTheme.colors.background) {
-        PuppyList(puppies = puppyList)
+        Scaffold(
+            topBar = {
+                TopAppBar(
+                    title = { Text("Adopt A Puppy!") }
+                )
+            }
+        ) {
+            PuppyList(puppies = puppyList)
+        }
     }
 }
 
