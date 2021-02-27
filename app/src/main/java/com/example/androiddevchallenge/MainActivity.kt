@@ -33,8 +33,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavType
+import androidx.navigation.compose.*
 import com.example.androiddevchallenge.model.Puppy
 import com.example.androiddevchallenge.model.puppyList
+import com.example.androiddevchallenge.ui.PuppyDetailPage
 import com.example.androiddevchallenge.ui.theme.MyTheme
 
 class MainActivity : AppCompatActivity() {
@@ -50,36 +54,50 @@ class MainActivity : AppCompatActivity() {
 
 @Composable
 fun MyApp() {
+    val navController = rememberNavController()
+
     Surface(color = MaterialTheme.colors.background) {
-        Scaffold(
-            topBar = {
-                TopAppBar(
-                    title = { Text("Adopt A Puppy!") }
-                )
+        NavHost(navController, startDestination = "puppyList") {
+            composable("puppyList") {
+                PuppyList(puppies = puppyList, navController)
             }
-        ) {
-            PuppyList(puppies = puppyList)
+            composable(
+                "puppyList/{puppyName}",
+                arguments = listOf(navArgument("puppyName") { type = NavType.StringType })
+            ) {
+                val puppyName = it.arguments?.getString("puppyName")!!
+                val puppy = puppyList.find { it.nickname == puppyName }!!
+                PuppyDetailPage(puppy, navController)
+            }
         }
     }
 }
 
 @Composable
-fun PuppyList(puppies: List<Puppy>) {
-    LazyColumn(
-        contentPadding = PaddingValues(top = 16.dp)
+fun PuppyList(puppies: List<Puppy>, navController: NavController) {
+    Scaffold(
+        topBar = {
+            TopAppBar(
+                title = { Text("Adopt a Puppy!") }
+            )
+        }
     ) {
-        items(items = puppies) { puppy ->
-            PuppyItem(puppy)
-            Spacer(modifier = Modifier.height(8.dp))
+        LazyColumn(
+            contentPadding = PaddingValues(top = 16.dp)
+        ) {
+            items(items = puppies) { puppy ->
+                PuppyItem(puppy) { navController.navigate("puppyList/${puppy.nickname}") }
+                Spacer(modifier = Modifier.height(8.dp))
+            }
         }
     }
 }
 
 @Composable
-private fun PuppyItem(puppy: Puppy) {
+private fun PuppyItem(puppy: Puppy, onPuppyClick: (Puppy) -> Unit) {
     Column(modifier = Modifier
         .clip(RoundedCornerShape(4.dp))
-        .clickable { }
+        .clickable { onPuppyClick(puppy) }
         .padding(horizontal = 16.dp)) {
 
         Row(
