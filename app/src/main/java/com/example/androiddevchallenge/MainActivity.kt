@@ -26,6 +26,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.DateRange
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -123,14 +125,26 @@ private fun PuppyItem(puppy: Puppy, onPuppyClick: (Puppy) -> Unit) {
             Spacer(modifier = Modifier.width(8.dp))
 
             Column {
-                Text(
-                    text = puppy.nickname,
-                    style = MaterialTheme.typography.h6
-                )
+                Row {
+                    Text(
+                        text = puppy.nickname,
+                        style = MaterialTheme.typography.h6
+                    )
 
-                Text(text = "${puppy.breed} - ${puppy.gender}")
+                    Icon(puppy.gender.genderImage, null, tint = puppy.gender.tint)
+                }
 
-                Text(text = "Born: ${puppy.dateBorn}")
+                Text(text = puppy.breed)
+
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(
+                        Icons.Default.DateRange,
+                        contentDescription = null,
+                        modifier = Modifier.padding(end = 4.dp)
+                    )
+
+                    Text(text = puppy.dateBorn)
+                }
             }
         }
 
