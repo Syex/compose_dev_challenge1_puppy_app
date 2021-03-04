@@ -2,7 +2,7 @@
 
 Template repository for the Jetpack Compose [#AndroidDevChallenge](https://developer.android.com/dev-challenge).
 
-![](Demo.gif)
+<img src="Demo.gif" width="360" />
 
 ## Getting started
 Copy this repository by pressing the "Use this template" button in Github.
